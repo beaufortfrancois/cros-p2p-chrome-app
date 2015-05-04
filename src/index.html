@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  body {
+    margin: 0 auto;
+    background: #0097A7;
+  }
+  div {
+    width: 256px;
+    height: 256px;
+    border-radius: 128px;
+    font-weight: bold;
+    color: white;
+    line-height: 128px;
+    font-size: 108px;
+    padding-top: 10px;
+    text-align: center;
+  }
+  div::after {
+    position: absolute;
+    content: 'MB';
+    width: 256px;
+    text-align: center;
+    background-color: #00BCD4;
+    top: 128px;
+    left: 0;
+  }
+  </style>
+</head>
+<body>
+  <div id="updateSize">?</div>
+  <script src="main.js"></script>
+</body>
+</html>
