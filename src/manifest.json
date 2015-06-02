@@ -4,14 +4,10 @@
   "short_name": "cros-p2p-chrome-app",
   "description": "",
   "version": "0.0.1",
-  "minimum_chrome_version": "38",
-
-  "icons": {
-    "16": "assets/icon_16.png",
-    "128": "assets/icon_128.png"
-  },
+  "minimum_chrome_version": "43",
   "permissions": [
-    "mdns"
+    "mdns",
+    "system.network"
   ],
   "app": {
     "background": {

@@ -2,34 +2,72 @@
 <html>
 <head>
   <style>
+  ::-webkit-scrollbar {
+    width: 0px !important;
+  }
+  html {
+    height: 100%;
+  }
   body {
+    max-width: 670px;
     margin: 0 auto;
     background: #0097A7;
-  }
-  div {
-    width: 256px;
-    height: 256px;
-    border-radius: 128px;
-    font-weight: bold;
     color: white;
-    line-height: 128px;
-    font-size: 108px;
-    padding-top: 10px;
-    text-align: center;
+    font-size: 16px;
+    overflow-y: scroll;
+    height: 100%;
   }
-  div::after {
-    position: absolute;
+  .download {
+    font-weight: bold;
+    margin-left: 12px;
+  }
+  .download::before {
+    background: url('assets/ic_file_download_white_48px.svg');
+    content: '';
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    background-size: 19px;
+    vertical-align: text-bottom;
+  }
+  .download::after {
     content: 'MB';
-    width: 256px;
-    text-align: center;
+    padding: 0 4px;
+    border-radius: 4px;
+    background-color: white;
+    color: #0097A7;
+    margin-left: 4px;
+  }
+  #downloadedUpdates .download::before {
+    visibility: hidden;
+  }
+  .update > div {
+    display: inline-block;
+  }
+  .update {
+    padding: 8px;
+  }
+  #availableUpdates .download {
+    cursor: pointer;
+  }
+  #availableUpdates .update {
     background-color: #00BCD4;
-    top: 128px;
-    left: 0;
+    margin-bottom: 4px;
+  }
+  .numConnections {
+    color: #0097A7;
+    float: right;
+    width: 19px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: white;
+    font-weight: bold;
   }
   </style>
 </head>
 <body>
-  <div id="updateSize">?</div>
+  <div id="downloadedUpdates"></div>
+  <div id="availableUpdates"></div>
   <script src="main.js"></script>
 </body>
 </html>
