@@ -1,15 +1,4 @@
-chrome.app.runtime.onLaunched.addListener(function() {
-  var windowOptions = {
-    id: 'window',
-    frame: { color: '#0097A7' },
-    innerBounds: { minWidth: 682, minHeight: 512 }
-  };
-  chrome.app.window.create('index.html', windowOptions, discoverServices);
-});
-
-var serviceFilter = {
-  serviceType: '_cros_p2p._tcp.local'
-};
+const serviceFilter = { serviceType: '_cros_p2p._tcp.local' };
 
 function discoverServices(createdWindow) {
   createdWindow.contentWindow.addEventListener('load', function() {
@@ -22,3 +11,14 @@ function discoverServices(createdWindow) {
     });
   });
 }
+
+function showWindow() {
+  var options = {
+    id: 'window',
+    frame: { color: '#0097A7' },
+    innerBounds: { width: 682, minWidth: 682, height: 512, minHeight: 512 }
+  };
+  chrome.app.window.create('index.html', options, discoverServices);
+}
+
+chrome.app.runtime.onLaunched.addListener(showWindow);

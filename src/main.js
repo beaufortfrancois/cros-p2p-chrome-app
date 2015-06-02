@@ -1,15 +1,14 @@
 function onServicesDiscovered(services) {
-  if (services.length === 0)
-    return;
-
   var downloadedUpdatesDiv = document.querySelector('#downloadedUpdates');
   var availableUpdatesDiv = document.querySelector('#availableUpdates');
 
   downloadedUpdatesDiv.textContent = '';
   availableUpdatesDiv.textContent = '';
 
+  if (services.length === 0)
+    return;
+
   //DEBUG
-  /*
   services.push({
     ipAddress: "192.168.144.216",
     serviceData: [
@@ -26,11 +25,10 @@ function onServicesDiscovered(services) {
   }, {
     ipAddress: "192.168.144.200",
     serviceData: [
-      "num_connections=2",
+      "num_connections=1",
       "id_cros_update_size_22205492_hash_aS9KNVdMRDhmZk9sdXAwZytVZTNGY2RHVHVBVXZRaCtJc2g5dWxjQ1dBcz0=.cros_au=12205492"
     ]
   });
-  */
 
   var localAddresses = [];
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
@@ -64,6 +62,9 @@ function onServicesDiscovered(services) {
           updatesDiv.appendChild(downloadDiv);
         } else if (serviceData.startsWith('num_connections')) {
           var numConnections = parseInt(serviceData.split(/[=]+/).pop(), 10);
+          if (numConnections == 0) {
+            continue;
+          }
           var numConnectionsDiv = document.createElement('div');
           numConnectionsDiv.textContent = numConnections;
           numConnectionsDiv.classList.add('numConnections');
@@ -77,8 +78,7 @@ function onServicesDiscovered(services) {
 }
 
 document.body.addEventListener('click', function(event) {
-  if (!event.target.classList.contains('download') && 'url' in event.target.dataset) {
-    return;
+  if ('url' in event.target.dataset) {
+    window.open(event.target.dataset.url);
   }
-  window.open(event.target.dataset.url);
 });
