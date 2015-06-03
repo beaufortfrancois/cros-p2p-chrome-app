@@ -5,20 +5,22 @@ html {
   height: 100%;
 }
 body {
-  max-width: 670px;
   margin: 0 auto;
-  background: #0097A7;
   color: white;
-  font-size: 16px;
+  background: -webkit-radial-gradient(bottom center, ellipse cover, #455A64 -50%,#37474F 50%);
+  background-color: #37474F;
+  font-size: 15px;
   overflow-y: scroll;
   height: 100%;
+  transition: opacity 1s ease-out;
+  opacity: 0;
 }
 .download {
   font-weight: bold;
   margin-left: 12px;
 }
 .download::before {
-  background: url('assets/ic_file_download_white_48px.svg');
+  background: url('assets/download.svg');
   content: '';
   display: inline-block;
   width: 19px;
@@ -31,32 +33,33 @@ body {
   padding: 0 4px;
   border-radius: 4px;
   background-color: white;
-  color: #0097A7;
+  color: #37474F;
   margin-left: 4px;
+  box-shadow: 0 1px 0 #333;
 }
 #downloadedUpdates::before,
 #availableUpdates::before {
   display: block;
-  border-bottom: 1px solid;
-  padding-bottom: 4px;
+  padding: 16px;
   font-weight: bold;
 }
 #downloadedUpdates::before {
-  content: "My Cached Updates";
+  content: "Chrome OS Update Cache";
 }
 #availableUpdates::before {
-  content: "P2P Network Updates";
+  content: "Local Network Update Cache";
 }
-
 #downloadedUpdates .download::before {
   visibility: hidden;
+  display: none;
 }
 .update > div {
   display: inline-block;
 }
 .update {
-  padding: 8px;
+  padding: 16px 32px;
   margin-bottom: 1px;
+  background-color: #455A64;
 }
 .update:last-child {
   margin-bottom: 24px;
@@ -64,18 +67,22 @@ body {
 #availableUpdates .download {
   cursor: pointer;
 }
-#availableUpdates .update {
-  background-color: #00BCD4;
-}
 .ipAddress {
   margin-right: 12px;
 }
 .numConnections {
-  color: #0097A7;
+  background-color: #37474F;
   float: right;
-  width: 19px;
+  width: 18px;
   text-align: center;
   border-radius: 50%;
-  background-color: white;
   font-weight: bold;
+  padding: 1px;
+}
+.error {
+  padding: 16px 32px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  background-color: #455A64;
+  color: #37474F;
 }

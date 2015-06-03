@@ -15,7 +15,7 @@ function discoverServices(createdWindow) {
 function showWindow() {
   var options = {
     id: 'window',
-    frame: { color: '#0097A7' },
+    frame: { color: '#37474F' },
     innerBounds: { width: 682, minWidth: 682, height: 512, minHeight: 512 }
   };
   chrome.app.window.create('index.html', options, discoverServices);

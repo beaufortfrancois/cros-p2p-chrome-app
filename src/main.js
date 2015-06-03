@@ -1,83 +1,65 @@
+var timeoutId;
+
 function onServicesDiscovered(services) {
-  var downloadedUpdatesDiv = document.querySelector('#downloadedUpdates');
-  var availableUpdatesDiv = document.querySelector('#availableUpdates');
+  console.log('onServicesDiscovered', services);
 
-  downloadedUpdatesDiv.textContent = '';
-  availableUpdatesDiv.textContent = '';
-
-  if (services.length === 0)
-    return;
-
-  //DEBUG
-  services.push({
-    ipAddress: "192.168.144.216",
-    serviceData: [
-      "num_connections=0",
-      "id_cros_update_size_18205492_hash_aS9KNVdMRDhmZk9sdXAwZytVZTNGY2RHVHVBVXZRaCtJc2g5dWxjQ1dBcz0=.cros_au=18205492"
-    ]
-  }, {
-    ipAddress: "192.168.144.143",
-    serviceData: [
-      "num_connections=2",
-      "id_cros_update_size_12205492_hash_aS9KNVdMRDhmZk9sdXAwZytVZTNGY2RHVHVBVXZRaCtJc2g5dWxjQ1dBcz0=.cros_au=23205492",
-      "id_cros_update_size_12205492_hash_aS9KNVdMRDhmZk9sdXAwZytVZTNGY2RHVHVBVXZRaCtJc2g5dWxjQ1dBcz0=.cros_au=28205492"
-    ]
-  }, {
-    ipAddress: "192.168.144.200",
-    serviceData: [
-      "num_connections=1",
-      "id_cros_update_size_22205492_hash_aS9KNVdMRDhmZk9sdXAwZytVZTNGY2RHVHVBVXZRaCtJc2g5dWxjQ1dBcz0=.cros_au=12205492"
-    ]
-  });
-
-  var localAddresses = [];
   chrome.system.network.getNetworkInterfaces(function(networkInterfaces) {
+    var localAddresses = [];
     for (var i = 0; i < networkInterfaces.length; i++) {
       localAddresses.push(networkInterfaces[i].address);
     }
 
-    for (var i = 0; i < services.length; i++) {
-      var updatesParentDiv = downloadedUpdatesDiv;
-      if (localAddresses.indexOf(services[i].ipAddress) == -1) {
-        updatesParentDiv = availableUpdatesDiv;
-      }
-      var updatesDiv = document.createElement('div');
-      updatesDiv.classList.add('update');
+    var downloadedUpdatesDiv = document.querySelector('#downloadedUpdates');
+    var availableUpdatesDiv = document.querySelector('#availableUpdates');
+    downloadedUpdatesDiv.textContent = '';
+    availableUpdatesDiv.textContent = '';
 
-      var ipAddressDiv = document.createElement('div');
-      ipAddressDiv.textContent = services[i].ipAddress;
-      ipAddressDiv.classList.add('ipAddress');
+    for (var service of services) {
+      if (!service.ipAddress) {
+        continue;
+      }
+      var updatesDiv = createDivElement('update');
+      var ipAddressDiv = createDivElement('ipAddress', service.ipAddress);
       updatesDiv.appendChild(ipAddressDiv);
 
-      for (var j = 0; j < services[i].serviceData.length; j++) {
-        var serviceData = services[i].serviceData[j];
+      for (var serviceData of service.serviceData) {
         if (serviceData.startsWith('id_cros_update_size_')) {
           var updateSize = parseInt(serviceData.split(/[=]+/).pop(), 10) / 1024 / 1024;
-          var downloadDiv = document.createElement('div');
-          downloadDiv.textContent = updateSize.toFixed(1);
-          downloadDiv.classList.add('download');
-          if (updatesParentDiv === availableUpdatesDiv) {
-            downloadDiv.dataset.url = 'http://' + services[i].ipAddress + ':16725/' + serviceData;
-          }
+          var downloadDiv = createDivElement('download', updateSize.toFixed(1));
+          downloadDiv.dataset.url = 'http://' + service.ipAddress + ':16725/' +
+              serviceData.substr(0, serviceData.lastIndexOf('=')).slice('id_'.length);
           updatesDiv.appendChild(downloadDiv);
         } else if (serviceData.startsWith('num_connections')) {
-          var numConnections = parseInt(serviceData.split(/[=]+/).pop(), 10);
-          if (numConnections == 0) {
-            continue;
-          }
-          var numConnectionsDiv = document.createElement('div');
-          numConnectionsDiv.textContent = numConnections;
-          numConnectionsDiv.classList.add('numConnections');
+          var numConnections = parseInt(serviceData.split(/[=]+/).pop(), 10) + '';
+          var numConnectionsDiv = createDivElement('numConnections', numConnections);
+          numConnectionsDiv.title = numConnections + ' HTTP Connections';
           updatesDiv.insertBefore(numConnectionsDiv, updatesDiv.firstChild);
         }
       }
-      updatesParentDiv.appendChild(updatesDiv);
+      if (localAddresses.indexOf(service.ipAddress) == -1) {
+        availableUpdatesDiv.appendChild(updatesDiv);
+      } else {
+        downloadedUpdatesDiv.appendChild(updatesDiv);
+      }
     }
+    if (!downloadedUpdatesDiv.childElementCount) {
+      downloadedUpdatesDiv.appendChild(createDivElement('error', 'Waiting...'));
+    }
+    if (!availableUpdatesDiv.childElementCount) {
+      availableUpdatesDiv.appendChild(createDivElement('error', 'Waiting...'));
+    }
+    document.body.style.opacity = 1;
   });
-  console.log(services);
 }
 
-document.body.addEventListener('click', function(event) {
+function createDivElement(className, textContent) {
+  var element = document.createElement('div');
+  element.textContent = textContent || '';
+  element.className = className || '';
+  return element;
+}
+
+document.querySelector('#availableUpdates').addEventListener('click', function(event) {
   if ('url' in event.target.dataset) {
     window.open(event.target.dataset.url);
   }
