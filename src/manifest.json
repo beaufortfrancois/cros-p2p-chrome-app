@@ -9,6 +9,9 @@
     "mdns",
     "system.network"
   ],
+  "icons": {
+    "128": "assets/icon128.png"
+  },
   "app": {
     "background": {
       "scripts": ["background.js"]

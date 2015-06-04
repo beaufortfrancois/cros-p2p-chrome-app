@@ -44,10 +44,10 @@ body {
   font-weight: bold;
 }
 #downloadedUpdates::before {
-  content: "Chrome OS Update Cache";
+  content: "My Cached Updates";
 }
 #availableUpdates::before {
-  content: "Local Network Update Cache";
+  content: "Local Network Cached Updates";
 }
 #downloadedUpdates .download::before {
   visibility: hidden;
