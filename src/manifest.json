@@ -1,9 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "cros-p2p-chrome-app",
-  "short_name": "cros-p2p-chrome-app",
-  "description": "",
-  "version": "0.0.1",
+  "name": "Chrome OS P2P Updates",
+  "description": "See all Chrome OS P2P updates in your local network",
+  "version": "0.1",
   "minimum_chrome_version": "43",
   "permissions": [
     "mdns",
